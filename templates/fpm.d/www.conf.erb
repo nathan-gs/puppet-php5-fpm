@@ -26,7 +26,7 @@ listen = <%= listen %>
 ; default: any
 ;
 ;listen.allowed_clients = 127.0.0.1
-<% end $>
+<% end -%>
 
 <% if listen == '/var/run/php5-fpm.sock' %>
 ; Set permissions for unix socket, if one used.
@@ -37,7 +37,7 @@ listen = <%= listen %>
 listen.owner = <%= user %>
 listen.group = <%= group %>
 listen.mode = 0666
-<% end $>
+<% end -%>
 
 ; Unix user/group of processes
 ; The user is mandatory. If the group is not set, the default user's group
@@ -87,7 +87,7 @@ pm.min_spare_servers = <%= pm_min_spare_servers %>
 ; It's mandatory when pm is set to dynamic
 ;
 ;pm.max_spare_servers = <%= pm_max_spare_servers %>
-<% end %>
+<% end -%>
  
 ; How much requests each process should execute before respawn.
 ; Useful to work around memory leaks in 3rd party libraries.
