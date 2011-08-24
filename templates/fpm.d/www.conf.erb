@@ -1,7 +1,7 @@
 ; Start a new pool named 'www'
 ; The name is used in logs and stats
 ; There is no limitation of the number of pool FPM can handle. Your system will tell you anyway :)
-[www]
+[<%= name %>]
 
 ; Address to accept fastcgi requests on.
 ; Valid syntaxes are:
@@ -11,14 +11,14 @@
 ; it's mandatory
 ;
 ;listen = /var/run/php5-fpm.sock
-listen = 127.0.0.1:9000
+listen = <%= listen %>
 
 ; Set listen(2) backlog
 ; -1 means unlimited
 ; default : -1
 ;
 ;listen.backlog = -1
- 
+<% if listen == '127.0.0.1:9000' %>
 ; List of ipv4 addresses of FastCGI clients that allowed to connect.
 ; Equivalent to FCGI_WEB_SERVER_ADDRS environment in original php.fcgi (5.2.2+)
 ; Makes sense only with a tcp listening socket.
@@ -26,21 +26,24 @@ listen = 127.0.0.1:9000
 ; default: any
 ;
 ;listen.allowed_clients = 127.0.0.1
+<% end $>
 
+<% if listen == '/var/run/php5-fpm.sock' %>
 ; Set permissions for unix socket, if one used.
 ; In Linux read/write permissions must be set in order to allow connections from web server.
 ; Many BSD-derrived systems allow connections regardless of permissions. 
 ; default: user and group are set as the running user. Mode is set to 0666
 ;
-;listen.owner = www-data
-;listen.group = www-data
-;listen.mode = 0666
+listen.owner = <%= user %>
+listen.group = <%= group %>
+listen.mode = 0666
+<% end $>
 
 ; Unix user/group of processes
 ; The user is mandatory. If the group is not set, the default user's group
 ; will be used
-user = www-data
-group = www-data
+user = <%= user %>
+group = <%= group %>
 
 ; Choose the process manager which control how processes are managed
 ; Two choices:
@@ -56,7 +59,7 @@ group = www-data
 ;                                      some children will be killed;
 ; It's mandatory
 ;pm = dynamic
-pm = static
+pm = <%= pm %>
 
 ; Sets the limit on the number of simultaneous requests (children processes will be forked) that will be served.
 ; Equivalent to Apache MaxClients directive (with mpm_prefork).
@@ -64,8 +67,9 @@ pm = static
 ; Used with any pm.style.
 ; It's mandatory
 ;
-pm.max_children = 10
+pm.max_children = <%= pm_max_children %>
 
+<% if pm == 'dynamic' %>
 ; Sets the number of server processes created on startup.
 ; Used only with 'dynamic' pm.style
 ; default : min_spare + (max_spare - min_spare) / 2
@@ -75,14 +79,15 @@ pm.max_children = 10
 ; Sets the desired minimum number of idle server processes.
 ; Used only with 'dynamic' pm.style
 ; It's mandatory when pm is set to dynamic
-;
-;pm.min_spare_servers = 5
+
+pm.min_spare_servers = <%= pm_min_spare_servers %>
 
 ; Sets the desired maximum number of idle server processes.
 ; Used only with 'dynamic' pm.style
 ; It's mandatory when pm is set to dynamic
 ;
-;pm.max_spare_servers = 35
+;pm.max_spare_servers = <%= pm_max_spare_servers %>
+<% end %>
  
 ; How much requests each process should execute before respawn.
 ; Useful to work around memory leaks in 3rd party libraries.
@@ -90,7 +95,7 @@ pm.max_children = 10
 ; Equivalent to PHP_FCGI_MAX_REQUESTS
 ; default : 0
 ;
-;pm.max_requests = 500
+;pm.max_requests = <%= pm_max_requests %>
 
 ; Sets the status URI to call to obtain php5-fpm status page.
 ; If not set, no URI will be recognized as a status page.

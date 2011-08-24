@@ -14,16 +14,20 @@ class php5-fpm {
 	service { php5-fpm:
 		ensure => running,
 		enable => true,
-		require => File["/etc/php5/fpm/php5-fpm.conf"],
+		require => File["/etc/php5/fpm/main.conf"],
 	}
 
-	file{"/etc/php5/fpm/php5-fpm.conf":
+	file{"/etc/php5/fpm/main.conf":
 		ensure => present,
 		owner	=> root,
 		group	=> root,
 		mode	=> 644,
-		content => template("php5-fpm/php5-fpm.conf.erb"),
+		content => template("php5-fpm/main.conf.erb"),
 		require => Package["php5-fpm"],
+	}
+	
+	file{"/etc/php5/fpm/pool.d/":
+		ensure => absent,
 	}
 
 	file{"/etc/php5/fpm/fpm.d":
@@ -38,7 +42,7 @@ class php5-fpm {
 	exec{"reload-php5-fpm":
 		command => "/etc/init.d/php5-fpm reload",
                 refreshonly => true,
-		require => File["/etc/php5/fpm/php5-fpm.conf"],
+		require => File["/etc/php5/fpm/main.conf"],
         }
 
 	# Define : php5-fpm::config
@@ -56,12 +60,24 @@ class php5-fpm {
 	#		ensure	=> present,
 	#		order	=> "000",
 	#	}
-	#	php5-fpm::config{"www-example-pool":
+	#	php5-fpm::config{"www":
 	#		ensure	=> present,
-	#		content	=> template("php5-fpm/fpm.d/www-pool.conf.erb"),
+	#		content	=> template("php5-fpm/fpm.d/www.conf.erb"),
 	#	}
 	#	
-        define config ( $ensure = 'present', $content = '', $order="500") {
+    define config ( 
+		$ensure = 'present', 
+		$content = '',
+		$order="500", 
+		$listen = '/var/run/php5-fpm.sock', 
+		$user = 'www-data', 
+		$group = 'www-data', 
+		$pm = 'dynamic',
+		$pm_max_children = 10,
+		$pm_min_spare_servers = 5,
+		$pm_max_spare_servers = 10,
+		$pm_max_requests = 0
+		) {
 		$real_content = $content ? { 
 			'' => template("php5-fpm/fpm.d/${name}.conf.erb"),
 	    		default => $content,
@@ -76,7 +92,9 @@ class php5-fpm {
 			notify => Exec["reload-php5-fpm"],
 			before => Service["php5-fpm"],
 		}
-        }
+   }
+		
+		
 }
 
 
