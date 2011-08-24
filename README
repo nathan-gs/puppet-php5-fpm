@@ -1,6 +1,7 @@
 # php5-fpm module #
 Author	: Benoit CATTIE <puppet@benoit.cattie.net>
-Version	: 0.1
+Author	: Nathan Bijnens <nathan@nathan.gs>
+Version	: 0.2
 Licence	: GPLv3
 
 Basic module for configuring php5-fpm via puppet.
@@ -9,10 +10,8 @@ Basic module for configuring php5-fpm via puppet.
 
 This module installs php5-fpm from packages. 
 
-php5-fpm is not yet packaged in standart distrib repositories. 
-I use brianmercer ppa : https://launchpad.net/~brianmercer/+archive/php/
-Not tested yet with dotdeb packages (xml conf).
- 
+php5-fpm is packaged in ubuntu since 11.04.
+
 Overwrites default conf with one than only include /etc/php5/fpm/fpm.d/*.conf.
 
 Configuration is made by 'php5-fpm::config' definition.
@@ -26,7 +25,7 @@ Config file 'php5-fpm.conf' is very minimal : only include /etc/php5/fpm/fpm.d/*
 Use php5-fpm::config for configuring php5-fpm 
 
 Templates:
-	- php5-fpm.conf.erb
+	- main.conf.erb
 
 
 ## Define : php5-fpm::config ##
