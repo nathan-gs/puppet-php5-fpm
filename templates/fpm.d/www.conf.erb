@@ -86,7 +86,7 @@ pm.min_spare_servers = <%= pm_min_spare_servers %>
 ; Used only with 'dynamic' pm.style
 ; It's mandatory when pm is set to dynamic
 ;
-;pm.max_spare_servers = <%= pm_max_spare_servers %>
+pm.max_spare_servers = <%= pm_max_spare_servers %>
 <% end -%>
  
 ; How much requests each process should execute before respawn.
@@ -95,7 +95,7 @@ pm.min_spare_servers = <%= pm_min_spare_servers %>
 ; Equivalent to PHP_FCGI_MAX_REQUESTS
 ; default : 0
 ;
-;pm.max_requests = <%= pm_max_requests %>
+pm.max_requests = <%= pm_max_requests %>
 
 ; Sets the status URI to call to obtain php5-fpm status page.
 ; If not set, no URI will be recognized as a status page.
