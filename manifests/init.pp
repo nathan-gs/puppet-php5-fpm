@@ -26,6 +26,10 @@ class php5-fpm {
 		require => Package["php5-fpm"],
 	}
 	
+	file{"/etc/php5/fpm/pool.d/www.conf":
+		ensure => absent,
+	}
+
 	file{"/etc/php5/fpm/pool.d/":
 		ensure => absent,
 	}
