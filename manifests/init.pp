@@ -25,6 +25,15 @@ class php5-fpm {
 		content => template("php5-fpm/main.conf.erb"),
 		require => Package["php5-fpm"],
 	}
+
+	file{"/etc/php5/fpm/php-fpm.conf":
+		ensure => present,
+		owner	=> root,
+		group	=> root,
+		mode	=> 644,
+		content => template("php5-fpm/main.conf.erb"),
+		require => Package["php5-fpm"],
+	}
 	
 	file{"/etc/php5/fpm/pool.d/www.conf":
 		ensure => absent,
