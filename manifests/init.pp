@@ -37,10 +37,12 @@ class php5-fpm {
 	
 	file{"/etc/php5/fpm/pool.d/www.conf":
 		ensure => absent,
+		force	=> true,
 	}
 
 	file{"/etc/php5/fpm/pool.d/":
 		ensure => absent,
+		force	=> true,
 	}
 
 	file{"/etc/php5/fpm/fpm.d":
