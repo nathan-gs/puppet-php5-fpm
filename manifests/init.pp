@@ -9,15 +9,40 @@
 #
 class php5-fpm {
 
-	package { php5-fpm: ensure => installed	}
+    $package_name = $operatingsystem ? {
+        redhat, centos  => 'php-fpm',
+        debian, ubuntu  => 'php5-fpm',
+        default         => 'php5-fpm'
+    }
 
-	service { php5-fpm:
+    $service_name = $operatingsystem ? {
+        redhat, centos  => 'php-fpm',
+        debian, ubuntu  => 'php5-fpm',
+        default         => 'php5-fpm'
+    }
+
+    $config_file = $operatingsystem ? {
+        redhat, centos  => '/etc/php-fpm.conf',
+        debian, ubuntu  => "/etc/php5/fpm/main.conf",
+        default         => "/etc/php5/fpm/main.conf"
+    }
+
+    $config_dir = $operatingsystem ? {
+        redhat, centos  => '/etc/php-fpm.d',
+        debian, ubuntu  => "/etc/php5/fpm/fpm.d",
+        default         => "/etc/php5/fpm/fpm.d"
+    }
+
+
+	package { $package_name: ensure => installed	}
+
+	service { $service_name:
 		ensure => running,
 		enable => true,
-		require => File["/etc/php5/fpm/main.conf"],
+		require => File["${config_file}"],
 	}
 
-	file{"/etc/php5/fpm/main.conf":
+	file{"${config_file}":
 		ensure => present,
 		owner	=> root,
 		group	=> root,
@@ -32,7 +57,7 @@ class php5-fpm {
 		group	=> root,
 		mode	=> 644,
 		content => template("php5-fpm/main.conf.erb"),
-		require => Package["php5-fpm"],
+		require => Package["${package_name}"],
 	}
 	
 	file{"/etc/php5/fpm/pool.d/www.conf":
@@ -45,20 +70,14 @@ class php5-fpm {
 		force	=> true,
 	}
 
-	file{"/etc/php5/fpm/fpm.d":
+	file{"${config_dir}":
 		ensure => directory,
 		checksum => mtime,
 		owner	=> root,
 		group	=> root,
 		mode	=> 644,
-		require => Package["php5-fpm"],
+		require => Package["${package_name}"],
 	}
-
-	exec{"reload-php5-fpm":
-		command => "/etc/init.d/php5-fpm reload",
-                refreshonly => true,
-		require => File["/etc/php5/fpm/main.conf"],
-        }
 
 	# Define : php5-fpm::config
 	#
@@ -98,14 +117,13 @@ class php5-fpm {
 	    		default => $content,
 	  	}
 
-		file { "/etc/php5/fpm/fpm.d/${order}-${name}.conf":
+		file { "${php5-fpm::config_dir}/${order}-${name}.conf":
 			ensure => $ensure,
 			content => $real_content,
 			mode => 644,
 			owner => root,
 			group => root,
-			notify => Exec["reload-php5-fpm"],
-			before => Service["php5-fpm"],
+			notify => Service["${php5-fpm::service_name}"],
 		}
    }
 		
