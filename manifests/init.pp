@@ -50,25 +50,35 @@ class php5-fpm {
 		content => template("php5-fpm/main.conf.erb"),
 		require => Package[$package_name],
 	}
+    case $operatingsystem {
+        'debian': {
+            file{"/etc/php5/fpm/php-fpm.conf":
+                ensure => present,
+                owner	=> root,
+                group	=> root,
+                mode	=> 644,
+                content => template("php5-fpm/main.conf.erb"),
+                require => Package["${package_name}"],
+            }
 
-	file{"/etc/php5/fpm/php-fpm.conf":
-		ensure => present,
-		owner	=> root,
-		group	=> root,
-		mode	=> 644,
-		content => template("php5-fpm/main.conf.erb"),
-		require => Package["${package_name}"],
-	}
-	
-	file{"/etc/php5/fpm/pool.d/www.conf":
-		ensure => absent,
-		force	=> true,
-	}
+            file{"/etc/php5/fpm/pool.d/www.conf":
+                ensure => absent,
+                force	=> true,
+            }
 
-	file{"/etc/php5/fpm/pool.d/":
-		ensure => absent,
-		force	=> true,
-	}
+            file{"/etc/php5/fpm/pool.d/":
+                ensure => absent,
+                force	=> true,
+            }
+
+
+        }
+
+        default:  { }
+    }
+
+
+
 
 	file{"${config_dir}":
 		ensure => directory,
