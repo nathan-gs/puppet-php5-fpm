@@ -123,7 +123,7 @@ class php5-fpm {
 			mode => 644,
 			owner => root,
 			group => root,
-			notify => Service["${php5-fpm::service_name}"],
+			notify => Service[$php5-fpm::service_name],
 		}
    }
 		
