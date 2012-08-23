@@ -117,7 +117,13 @@ class php5-fpm {
 	    		default => $content,
 	  	}
 
-		file { "${php5-fpm::config_dir}/${order}-${name}.conf":
+        $config_dir = $operatingsystem ? {
+            /(Fedora|CentOS|RedHat)/  => '/etc/php-fpm.d',
+            /(Debian|Ubuntu)/  => "/etc/php5/fpm/fpm.d",
+            default         => "/etc/php5/fpm/fpm.d"
+        }
+
+		file { "${config_dir}/${order}-${name}.conf":
 			ensure => $ensure,
 			content => $real_content,
 			mode => 644,
