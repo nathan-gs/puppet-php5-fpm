@@ -122,8 +122,7 @@ class php5-fpm {
 			content => $real_content,
 			mode => 644,
 			owner => root,
-			group => root,
-			notify => Service[$php5-fpm::service_name],
+			group => root
 		}
    }
 		
