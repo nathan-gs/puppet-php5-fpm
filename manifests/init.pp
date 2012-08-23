@@ -48,7 +48,7 @@ class php5-fpm {
 		group	=> root,
 		mode	=> 644,
 		content => template("php5-fpm/main.conf.erb"),
-		require => Package["php5-fpm"],
+		require => Package[$package_name],
 	}
 
 	file{"/etc/php5/fpm/php-fpm.conf":
