@@ -10,26 +10,26 @@
 class php5-fpm {
 
     $package_name = $operatingsystem ? {
-        redhat, centos  => 'php-fpm',
-        debian, ubuntu  => 'php5-fpm',
+        redhat, centos  => 'php-fpm'
+        debian, ubuntu  => 'php5-fpm'
         default         => 'php5-fpm'
     }
 
     $service_name = $operatingsystem ? {
-        redhat, centos  => 'php-fpm',
-        debian, ubuntu  => 'php5-fpm',
+        redhat, centos  => 'php-fpm'
+        debian, ubuntu  => 'php5-fpm'
         default         => 'php5-fpm'
     }
 
     $config_file = $operatingsystem ? {
-        redhat, centos  => '/etc/php-fpm.conf',
-        debian, ubuntu  => "/etc/php5/fpm/main.conf",
+        redhat, centos  => '/etc/php-fpm.conf'
+        debian, ubuntu  => "/etc/php5/fpm/main.conf"
         default         => "/etc/php5/fpm/main.conf"
     }
 
     $config_dir = $operatingsystem ? {
-        redhat, centos  => '/etc/php-fpm.d',
-        debian, ubuntu  => "/etc/php5/fpm/fpm.d",
+        redhat, centos  => '/etc/php-fpm.d'
+        debian, ubuntu  => "/etc/php5/fpm/fpm.d"
         default         => "/etc/php5/fpm/fpm.d"
     }
 
