@@ -34,6 +34,14 @@ class php5-fpm {
     }
 
 
+    $pid_file = $operatingsystem ? {
+        /(Fedora|CentOS|RedHat)/  => '/var/run/php-fpm/php-fpm.pid',
+        /(Debian|Ubuntu)/  => "/var/run/php5-fpm.pid",
+        default         => "/var/run/php5-fpm.pid"
+    }
+
+
+
 	package { $package_name: ensure => installed	}
 
 	service { $service_name:
@@ -76,6 +84,13 @@ class php5-fpm {
     file{ "${config_dir}/www.conf":
         ensure => absent,
         force	=> true,
+    }
+
+
+    $pid_file = $operatingsystem ? {
+        /(Fedora|CentOS|RedHat)/  => '/var/run/php-fpm/php-fpm.pid',
+        /(Debian|Ubuntu)/  => "/var/run/php5-fpm.pid",
+        default         => "/var/run/php5-fpm.pid"
     }
 
 
@@ -130,11 +145,6 @@ class php5-fpm {
             /(Fedora|CentOS|RedHat)/  => '/etc/php-fpm.d',
             /(Debian|Ubuntu)/  => "/etc/php5/fpm/fpm.d",
             default         => "/etc/php5/fpm/fpm.d"
-        }
-        $pid_file = $operatingsystem ? {
-            /(Fedora|CentOS|RedHat)/  => '/var/run/php-fpm/php-fpm.pid',
-            /(Debian|Ubuntu)/  => "/var/run/php5-fpm.pid",
-            default         => "/var/run/php5-fpm.pid"
         }
 
 		file { "${config_dir}/${order}-${name}.conf":
