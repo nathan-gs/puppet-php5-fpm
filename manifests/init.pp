@@ -129,6 +129,14 @@ class php5-fpm {
 		$pm_max_spare_servers = 10,
 		$pm_max_requests = 0
 		) {
+
+
+        $pid_file = $operatingsystem ? {
+            /(Fedora|CentOS|RedHat)/  => '/var/run/php-fpm/php-fpm.pid',
+            /(Debian|Ubuntu)/  => "/var/run/php5-fpm.pid",
+            default         => "/var/run/php5-fpm.pid"
+        }
+
 		$real_content = $content ? { 
 			'' => template("php5-fpm/fpm.d/${name}.conf.erb"),
 	    		default => $content,
@@ -138,12 +146,6 @@ class php5-fpm {
             /(Fedora|CentOS|RedHat)/  => '/etc/php-fpm.d',
             /(Debian|Ubuntu)/  => "/etc/php5/fpm/fpm.d",
             default         => "/etc/php5/fpm/fpm.d"
-        }
-
-        $pid_file = $operatingsystem ? {
-            /(Fedora|CentOS|RedHat)/  => '/var/run/php-fpm/php-fpm.pid',
-            /(Debian|Ubuntu)/  => "/var/run/php5-fpm.pid",
-            default         => "/var/run/php5-fpm.pid"
         }
 
 		file { "${config_dir}/${order}-${name}.conf":
